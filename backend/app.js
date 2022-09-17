@@ -57,7 +57,7 @@ app.post("/auth/login", async (req, res) => {
 app.get("/todo", async (req, res) => {
   let token = req.headers.authorization;
   var decoded = jwt_decode(token);
-  console.log(decoded.id);
+  // console.log(decoded.id);
   token = token.replace("Bearer ", "");
   let verify = jwt.verify(token, process.env.JWT_SECRET);
   // let list = await knex("users").where({ username }).first();
@@ -70,19 +70,22 @@ app.get("/todo", async (req, res) => {
   }
 });
 
+
+
 app.get("/showToDoList", async (req, res) => {
   let token = req.headers.authorization;
   var decoded = jwt_decode(token);
   token = token.replace("Bearer ", "");
   let verify = jwt.verify(token, process.env.JWT_SECRET);
-  let lists = await knex("lists").where({ user_id: decoded.id }).select("list").orderBy('id');
-  let listsArray = [];
-  for (let i = 0; i < lists.length; i++) {
-    listsArray.push(lists[i].list);
-  }
+  let lists = await knex("lists").where({ user_id: decoded.id }).select("id","list").orderBy('id');
+  // console.log(lists)
+  // let listsArray = [];
+  // for (let i = 0; i < lists.length; i++) {
+  //   listsArray.push(lists[i].list);
+  // }
   if (verify) {
     res.json({
-      todo: [listsArray],
+      todo: [lists],
     });
   } else {
     res.sendStatus(401);
@@ -99,6 +102,8 @@ app.post("/addToDoList", async (req, res) => {
   let verify = jwt.verify(token, process.env.JWT_SECRET);
   if (verify) {
     console.log(`added ${list} to DB`)
+    let lists = await knex("lists").where({ user_id: decoded.id }).select("id","list").orderBy('id');
+    res.send(lists)
     return add;
   } else {
     res.sendStatus(401);
@@ -108,19 +113,32 @@ app.post("/addToDoList", async (req, res) => {
 
 app.post("/deleteToDoList", async (req, res) => {
   console.log(req.body)
-  // const { list } = req.body;
-  // let decoded = jwt_decode(req.body.token);
-
-  // let token = req.body.token;
-  // token = token.replace("Bearer ", "");
-  // let verify = jwt.verify(token, process.env.JWT_SECRET);
-  // if (verify) {
-  //   console.log(`added ${list} to DB`)
-  // await knex ("lists").where("")
-  // } else {
-  //   res.sendStatus(401);
-  // }
+  let token = req.body.token;
+  token = token.replace("Bearer ", "");
+  let verify = jwt.verify(token, process.env.JWT_SECRET);
+  if (verify) {
+    await knex('lists').where("id", req.body.id).del();
+    console.log(`deleted ${req.body.id}`)
+  } else {
+    res.sendStatus(401);
+  }
 });
+
+app.post("/editToDoList", async (req, res) => {
+  let token = req.body.token;
+  let decoded = jwt_decode(req.body.token);
+  token = token.replace("Bearer ", "");
+  let verify = jwt.verify(token, process.env.JWT_SECRET);
+  if (verify) {
+    await knex('lists').where('id', req.body.id).update("list", req.body.edit)
+    console.log(`updated ${req.body.id}`)
+    let lists = await knex("lists").where({ user_id: decoded.id }).select("id","list").orderBy('id');
+    res.send(lists)
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 
 
 app.listen(8000, () => console.log("Listening to port 8000"));
