@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutThunk } from "../redux/authSlice";
-import { todoThunk, showtodoThunk, addtodoThunk, deletetodoThunk, edittodoThunk } from "../redux/todoSlice";
+import { showtodoThunk, addtodoThunk, deletetodoThunk, edittodoThunk } from "../redux/todoSlice";
 import Fade from 'react-bootstrap/Fade'
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { BsPencil } from "react-icons/bs";
+import { BsSearch } from "react-icons/bs";
+import { CSSTransition } from 'react-transition-group'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen } from '@fortawesome/free-solid-svg-icons'
 
 export default function Secret() {
-  // const todo = useSelector((state) => state.todoReducer.todo);
   const showtodo = useSelector((state) => state.todoReducer.showtodo[0]);
   const dispatch = useDispatch();
 
@@ -22,6 +20,8 @@ export default function Secret() {
   const [editList, setEditList] = useState({
     edit: ""
   })
+
+  const [searchList, setSearchList] = useState("")
 
   useEffect(() => {
     dispatch(showtodoThunk());
@@ -60,100 +60,101 @@ export default function Secret() {
     } else {
       dispatch(edittodoThunk({ id: event.target.nearestViewportElement.nextSibling.id, edit: editList.edit }));
       console.log(event.target.nearestViewportElement.nextSibling.id)
-
     }
-
   }
 
+  const handleSearchChange = (event) => {
+    let searchList = event.target.value
+    setSearchList(searchList);
+  }
+
+
+  const [inProp, setInProp] = useState(false);
   return (
     <div style={{ border: "soild 2px black", padding: "11px" }}>
-     
-     <Fade in={true} appear={true} timeout={100000}>
-     <h1 style={{fontStyle:"italic",fontFamily: 'Times New Roman, serif' }} className="h1card-subtitle text-muted text-center" >To do List</h1>
-     
-    </Fade>
-     <br />
-      <p class="form-control" aria-label="Text input with segmented dropdown button"> Welcome! You have logged in successfully.</p>
 
+      {/* Welcoming */}
+      <Fade in={true} appear={true} timeout={100000}>
+        <h1 style={{ fontStyle: "italic", fontFamily: 'Times New Roman, serif' }} className="h1card-subtitle text-muted text-center" >To do List</h1>
+      </Fade>
+      <br />
+      <p className="form-control" aria-label="Text input with segmented dropdown button"> Welcome! You have logged in successfully.</p>
       <br />
 
+
+      {/* Search field */}
+      <div className="row">
+        <div className="input-group">
+          <Button variant="dark">
+            <BsSearch />
+          </Button>
+          <input type="text" name="search" placeholder="Search something here ..." onChange={handleSearchChange} className="form-control" aria-label="Text input with segmented dropdown button"></input>
+          <div className="input-group-append">
+          </div>
+        </div>
+      </div>
+      <br />
+
+
+      {/* Add field */}
       <div >
-
-
-
-
-        <div class="input-group">
-          <input type="text" name="list" placeholder="add something here ..." onChange={handleChange} class="form-control" aria-label="Text input with segmented dropdown button"></input>
-          <div class="input-group-append">
-            <Button
-              onClick={() => dispatch(addtodoThunk(addList))}
-              variant="dark"
-            >
+        <div className="input-group">
+          <input type="text" name="list" placeholder="add something here ..." onChange={handleChange} className="form-control" aria-label="Text input with segmented dropdown button"></input>
+          <div className="input-group-append">
+            <Button onClick={() => dispatch(addtodoThunk(addList))} variant="dark">
               add
             </Button>
           </div>
         </div>
-
-
-
-
-
-
-
       </div>
-
       <br />
-      <p className="mb-2 text-muted text-center" style={{ textDecoration: 'underline',  fontSize:'16px', fontFamily:'Courier New, monospace'}}>Click the text to delete
-        <br /> Click the pen to update</p>
-
-      {/* list card */}
- 
 
 
-
-            {showtodo && showtodo.map((element, index) => (
-              < >
-                <div
-                  style={{ display: "flex", margin: "4px", padding: "13px", border: "solid", borderRadius: '11px' }}
-                >
-
-                  {/* <button variant="light"
-                    // id={element.id}
-                    penid={element.id}
-                    onClick={handleEditList}
-                    style={{ border: "solid black 1px", margin: "10px" }}
-                  >
-                    Edit
-                    <FontAwesomeIcon icon={faPen} 
-                   penid={element.id}
-                   style={{ border: "solid black 1px", margin: "5px" }}
-                   onClick={handleEditList}/> */}
+      {/* Explanation */}
+      <p className="mb-2 text-muted text-center" style={{ textDecoration: 'underline', fontSize: '16px', fontFamily: 'Courier New, monospace' }}>Click the text to delete
+        <br /> Type sth and click the pen to update</p>
 
 
-                  {/* </button> */}
+      {/* To do list */}
+      {showtodo && showtodo
+        .filter((element) => {
+          if (searchList === "") {
+            return element;
+          } else if (
+            element.list.toLowerCase().includes(searchList.toLowerCase())
+          ) {
+            return element;
+          } else {
+            return undefined;
+          }
+        })
 
-                  <p key={index} id={element.id} onClick={handleRemoveList}>
-                    {element.list}
-                  </p>
-                  <BsPencil
-
-                    penid={element.id}
-                    style={{ border: "solid black 1px", margin: "5px" }}
-                    onClick={handleEditList}
-                  />
-                </div>
-              </>
-            ))}
-            <div style={{ marginTop: "10px" }} >
-              <input style={{float: 'right', clear: 'both', marginRight:"4px", width: "50%",  border: "solid" }} type="text" name="edit" placeholder="edit something here ..." onChange={handleEditChange} class="form-control"></input>
-
+        .map((element, index) => (
+          < >
+            <div
+              style={{ display: "flex", margin: "4px", padding: "13px", border: "solid", borderRadius: '11px' }}
+            >
+              <p key={index} id={element.id} onClick={handleRemoveList}>
+                {element.list}
+              </p>
+              <BsPencil
+                penid={element.id}
+                style={{ border: "solid black 1px", margin: "5px" }}
+                onClick={handleEditList}
+              />
             </div>
+          </>
+        ))}
 
 
-    
-
+      {/* Edit box */}
+      <div style={{ marginTop: "10px" }} >
+        <input style={{ float: 'right', clear: 'both', marginRight: "4px", width: "50%", border: "solid" }} type="text" name="edit" placeholder="edit something here ..." onChange={handleEditChange} className="form-control"></input>
+      </div>
       <br />
 
+
+      {/* Logout Btn */}
       <Button style={{ position: "relative", float: "left" }} variant="dark" onClick={() => dispatch(logoutThunk())}>Logout</Button>
 
 
