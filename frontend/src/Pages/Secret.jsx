@@ -6,8 +6,6 @@ import Fade from 'react-bootstrap/Fade'
 import Button from 'react-bootstrap/Button';
 import { BsPencil } from "react-icons/bs";
 import { BsSearch } from "react-icons/bs";
-import { CSSTransition } from 'react-transition-group'
-
 
 export default function Secret() {
   const showtodo = useSelector((state) => state.todoReducer.showtodo[0]);
@@ -61,6 +59,7 @@ export default function Secret() {
       dispatch(edittodoThunk({ id: event.target.nearestViewportElement.nextSibling.id, edit: editList.edit }));
       console.log(event.target.nearestViewportElement.nextSibling.id)
     }
+    document.getElementById("updateBox").value ="";
   }
 
   const handleSearchChange = (event) => {
@@ -68,8 +67,6 @@ export default function Secret() {
     setSearchList(searchList);
   }
 
-
-  const [inProp, setInProp] = useState(false);
   return (
     <div style={{ border: "soild 2px black", padding: "11px" }}>
 
@@ -99,7 +96,7 @@ export default function Secret() {
       {/* Add field */}
       <div >
         <div className="input-group">
-          <input type="text" name="list" placeholder="add something here ..." onChange={handleChange} className="form-control" aria-label="Text input with segmented dropdown button"></input>
+          <input id="addBox" type="text" name="list" placeholder="add something here ..." onChange={handleChange} className="form-control" aria-label="Text input with segmented dropdown button"></input>
           <div className="input-group-append">
             <Button onClick={() => dispatch(addtodoThunk(addList))} variant="dark">
               add
@@ -132,8 +129,7 @@ export default function Secret() {
         .map((element, index) => (
           < >
             <div
-              style={{ display: "flex", margin: "4px", padding: "13px", border: "solid", borderRadius: '11px' }}
-            >
+              style={{ display: "flex", margin: "4px", padding: "13px", border: "solid", borderRadius: '11px' }}>
               <p key={index} id={element.id} onClick={handleRemoveList}>
                 {element.list}
               </p>
@@ -149,7 +145,7 @@ export default function Secret() {
 
       {/* Edit box */}
       <div style={{ marginTop: "10px" }} >
-        <input style={{ float: 'right', clear: 'both', marginRight: "4px", width: "50%", border: "solid" }} type="text" name="edit" placeholder="edit something here ..." onChange={handleEditChange} className="form-control"></input>
+        <input id="updateBox" style={{ float: 'right', clear: 'both', marginRight: "4px", width: "50%", border: "solid" }} type="text" name="edit" placeholder="edit something here ..." onChange={handleEditChange} className="form-control"></input>
       </div>
       <br />
 

@@ -61,9 +61,12 @@ export const addtodoThunk =
       console.log("respond from add")
       console.log(res.data)
       console.log("===================")
+
       let tmp = [];
       tmp.push(res.data)
       dispatch(showTodo(tmp));
+
+      document.getElementById("addBox").value ="";
     };
 
 export const deletetodoThunk =

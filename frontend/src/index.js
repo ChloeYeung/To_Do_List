@@ -14,7 +14,6 @@ root.render(
     <BrowserRouter>
       <Provider store={store}>
       <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-
         <App />
       </Provider>
     </BrowserRouter>
