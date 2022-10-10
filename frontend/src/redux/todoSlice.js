@@ -4,7 +4,6 @@ import axios from "axios";
 const initialState = {
   todo: [],
   showtodo: [],
-
 };
 
 export const todoSlice = createSlice({

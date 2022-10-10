@@ -27,8 +27,6 @@ export default function Secret() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-
     setAddList((prevValue) => ({
       ...prevValue,
       [name]: value,

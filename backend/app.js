@@ -57,10 +57,8 @@ app.post("/auth/login", async (req, res) => {
 app.get("/todo", async (req, res) => {
   let token = req.headers.authorization;
   var decoded = jwt_decode(token);
-  // console.log(decoded.id);
   token = token.replace("Bearer ", "");
   let verify = jwt.verify(token, process.env.JWT_SECRET);
-  // let list = await knex("users").where({ username }).first();
   if (verify) {
     res.json({
       todo: ["get bottle of water", "water plants", "eat breakfast"],
