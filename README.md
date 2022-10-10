@@ -1,13 +1,13 @@
-# To Do List
+# :memo: To Do List
 
 - React Application
 
 - Functionalities:
+
   :cloud: Login, Logout, Signup
-  <img width="714" alt="signup" src="https://user-images.githubusercontent.com/106992258/194888031-f219aa0e-bd25-4930-8eb0-76f8147b09d5.png">
+ <img width="714" alt="signup" src="https://user-images.githubusercontent.com/106992258/194888031-f219aa0e-bd25-4930-8eb0-76f8147b09d5.png">
 <img width="725" alt="login" src="https://user-images.githubusercontent.com/106992258/194888065-bef2301b-e226-404e-b7dc-546bbbaa5488.png">
 
-![Uploading login.png…]()
 
   :cloud: Search, Add, Delete, Edit items
   <img width="725" alt="to_do_list_home" src="https://user-images.githubusercontent.com/106992258/194887122-70d2e37f-157a-4555-b2b4-e9a7d5e30dc0.png">
