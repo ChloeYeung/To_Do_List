@@ -7,6 +7,7 @@ exports.up = function(knex) {
         table.increments('id').primary()
         table.string("user_id");
         table.string("list");
+        
       });
 };
 
