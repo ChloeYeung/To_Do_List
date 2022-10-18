@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { getAxioInstance, updateAxioInstance } from "../utils/globalAxios"
 
 const initialState = {
   isAuthenticated: false || localStorage.getItem("TOKEN") != null,
@@ -30,8 +30,8 @@ export default authSlice.reducer;
 export const signupThunk =
   ({ username, password }) =>
     async () => {
-      console.log(username, password);
-      await axios.post(`${process.env.REACT_APP_BACKEND}/auth/signup`, {
+      const axios = getAxioInstance()
+      await axios.post(`/auth/signup`, {
         username,
         password,
       });
@@ -40,13 +40,15 @@ export const signupThunk =
 export const loginThunk =
   ({ username, password }) =>
     async (dispatch) => {
+      const axios = getAxioInstance()
       let response = await axios.post(
-        `${process.env.REACT_APP_BACKEND}/auth/login`,
+        `/auth/login`,
         { username, password }
       );
       if (response.data) {
-        console.log(response.data);
-        localStorage.setItem("TOKEN", response.data.token);
+        let token = response.data.data
+        localStorage.setItem("TOKEN", token);
+        updateAxioInstance(token)
         getUsername(username);
         dispatch(login());
       }
@@ -54,5 +56,6 @@ export const loginThunk =
 
 export const logoutThunk = () => async (dispatch) => {
   localStorage.removeItem("TOKEN");
+  updateAxioInstance()
   dispatch(logout());
 };

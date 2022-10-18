@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { getAxioInstance } from "../utils/globalAxios"
 
 const initialState = {
   todo: [],
@@ -15,6 +15,7 @@ export const todoSlice = createSlice({
     },
 
     showTodo: (state, action) => {
+      console.log("action", action)
       state.showtodo = action.payload;
     },
   },
@@ -26,66 +27,53 @@ export const { getTodo, showTodo } = todoSlice.actions;
 export default todoSlice.reducer;
 
 export const todoThunk = () => async (dispatch) => {
-  const token = localStorage.getItem("TOKEN");
-  const response = await axios(`${process.env.REACT_APP_BACKEND}/todo`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const axios = getAxioInstance()
+  const response = await axios.get('/todo')
   dispatch(getTodo(response.data.todo));
 };
 
 export const showtodoThunk = () => async (dispatch) => {
-  const token = localStorage.getItem("TOKEN");
-  const response = await axios(`${process.env.REACT_APP_BACKEND}/showToDoList`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const axios = getAxioInstance()
+  const response = await axios.get('/todo')
   console.log("respond from show")
-  console.log(response.data.todo)
+  console.log(response.data.data)
   console.log("===================")
-  dispatch(showTodo(response.data.todo));
+  dispatch(showTodo(response.data.data));
 };
 
 export const addtodoThunk =
-  ({ list }) =>
+  (dto) =>
     async (dispatch) => {
-      console.log(list);
-      const token = localStorage.getItem("TOKEN");
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND}/addToDoList`, {
-        list,
-        token,
-      });
+      console.log(dto);
+      const { name } = dto
+      const axios = getAxioInstance()
+      const res = await axios.post('/todo', {
+        name
+      })
       console.log("respond from add")
       console.log(res.data)
       console.log("===================")
+      const newTodoList = await axios.get('/todo')
+      let todoList = [...newTodoList.data.data]
+      dispatch(showTodo(todoList));
 
-      let tmp = [];
-      tmp.push(res.data)
-      dispatch(showTodo(tmp));
-
-      document.getElementById("addBox").value ="";
+      document.getElementById("addBox").value = "";
     };
 
 export const deletetodoThunk =
   ({ id }) =>
     async () => {
-      const token = localStorage.getItem("TOKEN");
-      await axios.post(`${process.env.REACT_APP_BACKEND}/deleteToDoList`, {
-        id,
-        token
-      });
+      const axios = getAxioInstance()
+      await axios.delete(`/todo/${id}`)
     };
 
 export const edittodoThunk =
   ({ id, edit }) =>
     async (dispatch) => {
-      const token = localStorage.getItem("TOKEN");
-      let res = await axios.post(`${process.env.REACT_APP_BACKEND}/editToDoList`, {
-        id,
+      const axios = getAxioInstance()
+
+      let res = await axios.patch(`/todo/${id}`, {
         edit,
-        token
       });
       let tmp = [];
       tmp.push(res.data)
