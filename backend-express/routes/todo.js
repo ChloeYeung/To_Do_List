@@ -6,9 +6,10 @@ const { getTodoList, addTodoItem, updateTodoItemById, deleteTodoItemById } = req
 /* GET users listing. */
 router.get('/', async function (req, res) {
   try {
-    const list = await getTodoList(req.user.id)
+    const list = await getTodoList(req.user.userId)
     return responseHandler({ res, data: [...list] ?? [], code: 200 })
   } catch (error) {
+    console.log("error", error)
     return responseHandler({ res, errorMessage: error.message })
   }
 });
@@ -19,7 +20,7 @@ router.post('/', async function (req, res) {
     return responseHandler({ res, code: 400 })
   }
   try {
-    const newTodoItem = await addTodoItem(req.user.id, item)
+    const newTodoItem = await addTodoItem(req.user.userId, item)
     return responseHandler({ res, code: 201, data:newTodoItem })
   } catch (error) {
     return responseHandler({ res, errorMessage: error.message })
