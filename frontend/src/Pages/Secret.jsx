@@ -14,7 +14,6 @@ import { BsSearch } from "react-icons/bs"
 
 export default function Secret() {
 	const showtodo = useSelector((state) => {
-		console.log("state", state)
 		return state.todoReducer.showtodo
 	})
 	const dispatch = useDispatch()
@@ -58,6 +57,9 @@ export default function Secret() {
 	}
 
 	const handleEditList = (event) => {
+    if(editList.edit === ""){
+      return // no action for empty data
+    }
 		if (event.target.localName == "svg") {
 			// console.log(event.target.attributes[1].nodeValue)
 			dispatch(
@@ -182,34 +184,32 @@ export default function Secret() {
 					})
 
 					.map((element, index) => (
-						<>
-							<div
-                key={index}
-								style={{
-									display: "flex",
-									margin: "4px",
-									padding: "13px",
-									border: "solid",
-									borderRadius: "11px",
-								}}
+						<div
+							key={index}
+							style={{
+								display: "flex",
+								margin: "4px",
+								padding: "13px",
+								border: "solid",
+								borderRadius: "11px",
+							}}
+						>
+							<p
+								key={index}
+								id={element.id}
+								onClick={handleRemoveList}
 							>
-								<p
-									key={index}
-									id={element.id}
-									onClick={handleRemoveList}
-								>
-									{element.list}
-								</p>
-								<BsPencil
-									penid={element.id}
-									style={{
-										border: "solid black 1px",
-										margin: "5px",
-									}}
-									onClick={handleEditList}
-								/>
-							</div>
-						</>
+								{element.list}
+							</p>
+							<BsPencil
+								penid={element.id}
+								style={{
+									border: "solid black 1px",
+									margin: "5px",
+								}}
+								onClick={handleEditList}
+							/>
+						</div>
 					))}
 
 			{/* Edit box */}

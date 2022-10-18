@@ -72,10 +72,10 @@ export const edittodoThunk =
     async (dispatch) => {
       const axios = getAxioInstance()
 
-      let res = await axios.patch(`/todo/${id}`, {
+      await axios.patch(`/todo/${id}`, {
         edit,
       });
-      let tmp = [];
-      tmp.push(res.data)
-      dispatch(showTodo(tmp));
+      const newTodoList = await axios.get('/todo')
+      let todoList = [...newTodoList.data.data]
+      dispatch(showTodo(todoList));
     };
