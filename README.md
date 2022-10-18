@@ -13,38 +13,38 @@
 <img width="722" alt="to_do_list" src="https://user-images.githubusercontent.com/106992258/194890254-bd92f458-c758-4f91-a60d-82422f4d8f42.png">
 
 
-### Install frontend Packages
+### Install & Run frontend Packages
 
-`cd frontend`
-`npm install @reduxjs/toolkit react-redux axios bootstrap react-bootstrap react-dom react-icons react-router-dom`
+```
+cd frontend
+npm install
+npm start
+```
 
-### Install backend Packages
+### Install & Run backend Packages
 
-`cd backend`
-` npm install bcrypt cors dotenv express jsonwebtoken jwt-decode knex passport passport-jwt pg`
+```
+cd backend-express
+npm install
+npm start
+```
 
 ### Setup frontend .env
 
-- in /frontend , set 1 variable in .env
-  `REACT_APP_BACKEND = http://localhost:8000`
+- in /frontend , follow `.env.example` to create `.env`
 
 ### Setup backend .env
 
-- in /backend , set 4 variables in .env
-  `DB_NAME = YOUR DATABASE NAME`
-  `DB_USERNAME = YOUR DATABASE USERNAME`
-  `DB_PASSWORD = YOUR DATABASE PASSWORD`
-  `JWT_SECRET = YOUR JWT_SECRET`
+- in /backend-express , follow `.env.example` to create `.env`
 
 ### Setup for backend DB connect
 
-- set up dummy data, run:
-  `knex migrate:latest`
-  `knex seed:run`
-
-### Start the App:
-
-`npm start`
+```
+cd backend-express
+npm install
+npm run db-migrate
+npm run db-seed
+```
 
 ### Account information
 
