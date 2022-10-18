@@ -5,9 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require("cors");
 const authJWTMiddleware = require("./middleware/jwt.middleware")
+const {logErrors, clientErrorHandler, errorHandler} = require("./middleware/error.middleware")
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+var authRouter = require('./routes/auth');
 //Setup Modules
 var app = express();
 app.use(cors());
@@ -19,6 +20,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Init JWT 
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/users', authJWTMiddleware, usersRouter);
+
+// Error handling
+app.use(logErrors)
+app.use(clientErrorHandler)
+app.use(errorHandler)
 
 module.exports = app;
