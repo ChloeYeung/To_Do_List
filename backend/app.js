@@ -35,7 +35,6 @@ app.post("/auth/signup", async (req, res) => {
 
 app.post("/auth/login", async (req, res) => {
   const { username, password } = req.body;
-
   let user = await knex("users").where({ username }).first();
 
   if (user) {
@@ -93,6 +92,7 @@ app.get("/showToDoList", async (req, res) => {
 
 app.post("/addToDoList", async (req, res) => {
   const { list } = req.body;
+  console.log("list", list)
   let decoded = jwt_decode(req.body.token);
   let add = await knex('lists').insert({ user_id: decoded.id, list: list });
   let token = req.body.token;
@@ -138,5 +138,5 @@ app.post("/editToDoList", async (req, res) => {
 });
 
 
-
-app.listen(8000, () => console.log("Listening to port 8000"));
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log(`Listening to port ${port}`));
