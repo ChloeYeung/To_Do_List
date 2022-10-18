@@ -16,6 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 auth(knex).initialize();
 
+// middleware
+app.use((req, res, next) => {
+  console.log('Time:', Date.now())
+  next()
+})
+
 //Route
 app.post("/auth/signup", async (req, res) => {
   // const username = req.body.username;
