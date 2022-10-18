@@ -17,8 +17,16 @@ async function register (username,password){
         throw new Error("User Registrated")
     }
     const hashed = await bcrypt.hash(password, 10);
-    let newUser = await knexInstance("users").insert({ username, password: hashed });
-    return newUser
+    let add = await knexInstance("users").insert({ username, password: hashed }).returning('id')
+    if(add.length === 0){
+        throw new Error("Database fail in insertion")
+    }
+    let newUserId = add[0].id
+    let newItem = await knexInstance("users").where({ id: newUserId }).select("id","username").first()
+    if(!newItem){
+        throw new Error("Database fail to find inserted result")
+    }
+    return newItem
 }
 module.exports = {
     login,
