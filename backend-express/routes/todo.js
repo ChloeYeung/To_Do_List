@@ -15,12 +15,12 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/', async function (req, res) {
-  const { list:item } = req.body;
-  if (!isDefined(item)) {
+  const { name } = req.body;
+  if (!isDefined(name)) {
     return responseHandler({ res, code: 400 })
   }
   try {
-    const newTodoItem = await addTodoItem(req.user.userId, item)
+    const newTodoItem = await addTodoItem(req.user.userId, name)
     return responseHandler({ res, code: 201, data:newTodoItem })
   } catch (error) {
     return responseHandler({ res, errorMessage: error.message })
